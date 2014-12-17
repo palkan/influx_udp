@@ -1,0 +1,12 @@
+{application, test_udp,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { test_udp_app, []}},
+  {env, []}
+ ]}.
