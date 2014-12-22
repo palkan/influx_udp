@@ -30,7 +30,7 @@
 %% ------------------------------------------------------------------
 
 start_link(Args) ->
-  gen_server:start_link({local, ?SERVER}, ?MODULE, Args, []).
+  gen_server:start_link(?MODULE, Args, []).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
