@@ -5,6 +5,16 @@ Write data to influxdb using JSON UDP interface [(influxdb docs)](http://influxd
 
 ## Setup
 
+rebar.config
+```
+...
+{deps, [
+  ...
+  {influx_udp, ".*", {git, "https://github.com/palkan/influx_udp.git", "master"}}
+]}.
+...
+```
+
 app.config
 ```
 [
@@ -13,13 +23,18 @@ app.config
         {influx_host, 'my@influx.com'}, %% default '127.0.0.1'
         {influx_port, 1234}, %% default 4444
         {pool_size, 5}, 
-        {max_overflow, 10} %% poolboy settings
+        {max_overflow, 10} %% poolboy settings (defaults are 1 and 0)
     ]
   }
 ].
 ```
 
+
 ## Usage
+
+First, start application: `influx_udp:start()` .
+
+And then write data:
 
 ```
 influx_udp:write(Series::string()|atom()|binary(), Points). %% Points can be list of maps (proplists) or map (proplist) 
