@@ -1,7 +1,11 @@
+[![Build Status](https://travis-ci.org/palkan/influx_udp.svg?branch=master)](https://travis-ci.org/palkan/influx_udp)
+
 Erlang InfluxDB UDP Writer
 ==========================
 
 Write data to influxdb using JSON UDP interface [(influxdb docs)](http://influxdb.com/docs/v0.8/api/reading_and_writing_data.html#writing-data-through-json-+-udp).
+
+**Erlang version:** >=17.1
 
 ## Setup
 
