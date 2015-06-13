@@ -35,8 +35,7 @@ start_link(Args) ->
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
-
-init([Host, Port]) ->
+init([{options, #{ host := Host, port := Port} = _Options}]) ->
   {ok, Socket} = gen_udp:open(0, [binary, {active, false}]),
   LocalPort = inet:port(Socket),
   ?I({"Open UDP socket on port", LocalPort}),

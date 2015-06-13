@@ -1,4 +1,3 @@
--define(POOL_NAME, influx_udp_pool).
 -define(APP, influx_udp).
 -define(Config(X,Y), ulitos_app:get_var(?APP, X,Y)).
 

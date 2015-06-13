@@ -25,6 +25,8 @@ app.config
 [
   {influx_udp,
     [
+        {influx_host, '8.8.8.8'}, %% defaults to '127.0.0.1'
+        {influx_port, 4444}, %% defaults to 4444
         {pool_size, 5}, 
         {max_overflow, 10} %% poolboy settings (defaults are 1 and 0)
     ]
@@ -32,36 +34,43 @@ app.config
 ].
 ```
 
-
 ## Usage
 
-First, start application: 
+First, you need to start application: 
 
 ```erlang
 influx_udp:start().
 ``` 
 
-Second, start new connection pool:
+And then you can create pools and write data to InfluxDB.
+
+## Pools
+
+The default pool is started on application start unless you specified `{default_pool, false}` in configuration file.
+
+Default pool uses parameters specified in application configuration.
+
+You can run pools manually:
 
 ```erlang
-
-%% Start named pool with custom host and port
-{ok, Pid} = influx_udp:start_pool(my_pool, #{ host => "localhost", port => 4445, database => "my_db" }).
-
-%% Or start anonymous pool (with default host and port ("localhost:4444")) 
-{ok, Pid} = influx_udp:start_pool(#{ database => "my_db" }).
+influx_udp:start_pool(my_pool, #{ host => 'yet.another.influx.host' }).
 ```
 
-And then write data:
+Options not specified in `influx_udp:start_pool/2` would be taken from default configuration.
+
+## Writing data
 
 ```erlang
 
 %% Writing to named pool
 influx_udp:write(my_pool, Series::string()|atom()|binary(), Points::list(map())|list(proplist())|map()|proplist()). 
 
-%% Writing to anonymous pool
-influx_udp:write(Pid, Series, Points).
+%% Writing to default pool
+influx_udp:write(Series, Points).
 
 %% Writing raw valid InfluxDB input data
-influx_udp:write(Pool, Data::binary()).
+influx_udp:write(Data::binary()).
+
+%% or
+influx_udp:write(my_pool, Data::binary()).
 ```
