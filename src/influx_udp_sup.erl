@@ -9,7 +9,9 @@
 -export([init/1]).
 
 %% Helper macro for declaring children of supervisor
--define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
+-define(
+  CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}
+).
 
 %% ===================================================================
 %% API functions
@@ -18,22 +20,27 @@
 start_link() ->
   supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
--spec start_pool(Host::inet:ip_address()|inet:ip_hostname(), Port::inet:port_number()) -> ok.
-
-start_pool(Host, Port) ->
+-spec start_pool(
+    Host::inet:ip_address()|inet:ip_hostname(),
+    Port::inet:port_number()
+  ) -> {ok, undefined | pid()} |
+       {ok, undefined | pid(), any()} |
+       {error, any()}.
+start_pool(Name, Options) ->
   SizeArgs = [
-    {size,?Config(pool_size,1)},
-    {max_overflow,?Config(max_overflow,1)}
+    {size, maps:get(pool_size, Options)},
+    {max_overflow, maps:get(max_overflow, Options)}
   ],
+
   PoolArgs = [
-    {name, {local, ?POOL_NAME}},
+    {name, {local, Name}},
     {worker_module, influx_udp_worker}
   ] ++ SizeArgs,
 
-  PoolSpecs = [poolboy:child_spec(?POOL_NAME, PoolArgs, [Host, Port])],
-  [supervisor:start_child(?MODULE, Spec) || Spec <- PoolSpecs],
-  ok.
-
+  supervisor:start_child(
+    ?MODULE,
+    poolboy:child_spec(Name, PoolArgs, [{options, Options}])
+  ).
 
 %% ===================================================================
 %% Supervisor callbacks
@@ -43,5 +50,4 @@ init([]) ->
   Children = [
     ?CHILD(influx_udp, worker)
   ], 
-
   {ok, { {one_for_one, 5, 10}, Children} }.

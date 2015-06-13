@@ -18,7 +18,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
--record(state,{
+-record(state, {
   socket ::gen_udp:socket()|undefined,
   port ::inet:port_number()|undefined,
   host ::inet:ip_address()|inet:ip_hostname()|undefined,
@@ -35,15 +35,22 @@ start_link(Args) ->
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
-
-init([Host, Port]) ->
+init([{options, #{ host := Host, port := Port} = _Options}]) ->
   {ok, Socket} = gen_udp:open(0, [binary, {active, false}]),
   LocalPort = inet:port(Socket),
   ?I({"Open UDP socket on port", LocalPort}),
-  {ok, #state{socket = Socket, host = Host, port = Port, local_port = LocalPort}}.
+  {
+    ok, 
+    #state{
+      socket = Socket,
+      host = Host,
+      port = Port,
+      local_port = LocalPort
+    }
+  }.
 
 handle_call({write, Bin}, _From, State) when is_binary(Bin) ->
-  {reply, send_data(State,Bin), State};
+  {reply, send_data(State, Bin), State};
 
 handle_call({write, Series, Points}, _From, State) ->
   {reply, send_data(State, encode(Series, Points)), State};
@@ -87,15 +94,25 @@ send_data(#state{socket=Socket, port=Port, host=Host}, Data) ->
 %%    }
 %% ]
 %% @end
--spec encode(Name::string()|atom()|binary(), Points::list(influx_data_point())|influx_data_point()) -> JSON::binary().
-
+-spec encode(
+  Name::string()|atom()|binary(),
+  Points::list(influx_data_point())|influx_data_point()
+) -> JSON::binary().
 encode(Name, Points) when is_list(Name) ->
   encode(to_key(Name), Points);
 
 encode(Name, Points) ->
   case encode_points(Points) of
     {[], _} -> false;
-    {Columns, Values} -> jsx:encode([#{name => Name, columns => normalize_columns(Columns), points => Values}])
+    {Columns, Values} -> 
+      jsx:encode(
+        [#{
+            name => Name,
+            columns => normalize_columns(Columns),
+            points => Values
+          }
+        ]
+      )
   end.
 
 %% Handle proplist
@@ -119,7 +136,7 @@ encode_item(map, Keys, M) ->
 encode_item(list, Keys, L) -> 
   [to_val(proplists:get_value(K, L, null)) || K <- Keys];
 
-encode_item(_,_,_) -> false.
+encode_item(_, _, _) -> false.
 
 to_key(S) when is_list(S) ->
   list_to_binary(S);
@@ -157,22 +174,26 @@ get_points([#{<<"points">> := Points}]) -> Points.
 decode_data(Data) -> jsx:decode(Data, [return_maps]).
 
 encode_1_test() ->
-  Data = decode_data(encode(test, [ [{1,1}], [{1,3}] ])),
+  Data = decode_data(encode(test, [ [{1, 1}], [{1, 3}] ])),
   ?assertEqual(<<"test">>, get_series(Data)),
   ?assertEqual([<<"1">>], get_columns(Data)),
-  ?assertEqual([[1],[3]], get_points(Data)).
+  ?assertEqual([[1], [3]], get_points(Data)).
 
 encode_2_test() ->
-  Data = decode_data(encode("test", [ [{<<"1">>,1}], [{<<"1">>,3}] ])),
+  Data = decode_data(
+    encode("test", [ [{<<"1">>, 1}], [{<<"1">>, 3}] ])
+  ),
   ?assertEqual(<<"test">>, get_series(Data)),
   ?assertEqual([<<"1">>], get_columns(Data)),
-  ?assertEqual([[1],[3]], get_points(Data)).
+  ?assertEqual([[1], [3]], get_points(Data)).
 
 encode_3_test() ->
-  Data = decode_data(encode(<<"test">>, [#{'1' => 1}, #{'1' => 3}])),
+  Data = decode_data(
+    encode(<<"test">>, [#{'1' => 1}, #{'1' => 3}])
+  ),
   ?assertEqual(<<"test">>, get_series(Data)),
   ?assertEqual([<<"1">>], get_columns(Data)),
-  ?assertEqual([[1],[3]], get_points(Data)).
+  ?assertEqual([[1], [3]], get_points(Data)).
 
 encode_4_test() ->
   Data = decode_data(encode(<<"test">>, #{1 => 1})),
