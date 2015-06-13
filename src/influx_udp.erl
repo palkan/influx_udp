@@ -81,14 +81,23 @@ write(Pool, Bin) when is_binary(Bin) ->
 %% Write data points to Series using default pool.
 %% @end
 write(Series, Points) ->
-  gen_server:call(?SERVER, {send_to_pool, default, {write, Series, Points}}).
+  gen_server:call(
+    ?SERVER,
+    {send_to_pool, default, {write, Series, Points}}
+  ).
 
 %% @doc
 %% Write data points to Series using named pool.
 %% @end
--spec write(Pool::atom(), Series::atom()|string()|binary(), Points::list(influx_data_point())|influx_data_point()) -> ok.
+-spec write(
+  Pool::atom(), Series::atom()|string()|binary(),
+  Points::list(influx_data_point())|influx_data_point()
+) -> ok.
 write(Pool, Series, Points) ->
-  gen_server:call(?SERVER, {send_to_pool, Pool, {write, Series, Points}}).
+  gen_server:call(
+    ?SERVER,
+    {send_to_pool, Pool, {write, Series, Points}}
+  ).
 
 init_server() ->
   erlang:register(?SERVER, self()),
@@ -114,7 +123,11 @@ init_server() ->
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
-handle_call({start_pool, Name, Options}, _, #state{defaults = Defaults} = State) ->
+handle_call(
+  {start_pool, Name, Options},
+  _,
+  #state{defaults = Defaults} = State
+) ->
   {reply, start_pool_(Name, maps:merge(Defaults, Options)), State};
 
 handle_call({send_to_pool, Pool, Msg}, _, State) ->
@@ -143,11 +156,17 @@ code_change(_OldVsn, State, _Extra) ->
 %% ------------------------------------------------------------------
 %% Internal Function Definitions
 %% ------------------------------------------------------------------
--spec start_pool_(Name::atom(), Options::map()) -> {ok, Pid::pid()} | {error, Reason::any()}.
+-spec start_pool_(
+  Name::atom(),
+  Options::map()
+) -> {ok, Pid::pid()} | {error, Reason::any()}.
 start_pool_(Name, #{ host := Hostname } = Options) ->
   case inet:getaddr(Hostname, inet) of
     {ok, Host} -> 
-      influx_udp_sup:start_pool(Name, maps:update(host, Host, Options));
+      influx_udp_sup:start_pool(
+        Name,
+        maps:update(host, Host, Options)
+      );
     {error, Error} ->
       ?E({<<"Failed to resolve influxdb host">>, Hostname, Error}),
       {error, Error}

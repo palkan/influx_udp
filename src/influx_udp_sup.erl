@@ -9,7 +9,9 @@
 -export([init/1]).
 
 %% Helper macro for declaring children of supervisor
--define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
+-define(
+  CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}
+).
 
 %% ===================================================================
 %% API functions
@@ -19,8 +21,11 @@ start_link() ->
   supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 -spec start_pool(
-    Host::inet:ip_address()|inet:ip_hostname(), Port::inet:port_number()
-  ) -> {ok, undefined | pid()} | {ok, undefined | pid(), any()} | {error, any()}.
+    Host::inet:ip_address()|inet:ip_hostname(),
+    Port::inet:port_number()
+  ) -> {ok, undefined | pid()} |
+       {ok, undefined | pid(), any()} |
+       {error, any()}.
 start_pool(Name, Options) ->
   SizeArgs = [
     {size, maps:get(pool_size, Options)},
@@ -32,7 +37,10 @@ start_pool(Name, Options) ->
     {worker_module, influx_udp_worker}
   ] ++ SizeArgs,
 
-  supervisor:start_child(?MODULE, poolboy:child_spec(Name, PoolArgs, [{options, Options}])).
+  supervisor:start_child(
+    ?MODULE,
+    poolboy:child_spec(Name, PoolArgs, [{options, Options}])
+  ).
 
 %% ===================================================================
 %% Supervisor callbacks

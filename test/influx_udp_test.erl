@@ -7,7 +7,7 @@
 
 setup_() ->
   lager:start(),
-  test_udp_app:start([],[]),
+  test_udp_app:start([], []),
   influx_udp:start(),
   {ok, Pid} = influx_udp:start_pool(test, #{ pool_size => 1}).
 
