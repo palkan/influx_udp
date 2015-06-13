@@ -3,14 +3,16 @@
 Erlang InfluxDB UDP Writer
 ==========================
 
-Write data to influxdb using JSON UDP interface [(influxdb docs)](http://influxdb.com/docs/v0.8/api/reading_and_writing_data.html#writing-data-through-json-+-udp).
+Write data to Influxdb (~>0.9) using JSON UDP interface [(influxdb docs)](http://influxdb.com/docs/v0.9/concepts/reading_and_writing_data.html).
+
+**For InfluxDB ~> 0.8 see [this branch]().**
 
 **Erlang version:** >=17.1
 
 ## Setup
 
 rebar.config
-```
+```erlang
 ...
 {deps, [
   ...
@@ -20,12 +22,10 @@ rebar.config
 ```
 
 app.config
-```
+```erlang
 [
   {influx_udp,
     [
-        {influx_host, 'my@influx.com'}, %% default '127.0.0.1'
-        {influx_port, 1234}, %% default 4444
         {pool_size, 5}, 
         {max_overflow, 10} %% poolboy settings (defaults are 1 and 0)
     ]
@@ -36,12 +36,32 @@ app.config
 
 ## Usage
 
-First, start application: `influx_udp:start()` .
+First, start application: 
+
+```erlang
+influx_udp:start().
+``` 
+
+Second, start new connection pool:
+
+```erlang
+
+# Start named pool with custom host and port
+{ok, Pid} = influx_udp:start_pool(my_pool, #{ host => "localhost", port => 4445, database => "my_db" }).
+
+# Or start anonymous pool (with default host and port ("localhost:4444")) 
+{ok, Pid} = influx_udp:start_pool(#{ database => "my_db" }).
 
 And then write data:
 
-```
-influx_udp:write(Series::string()|atom()|binary(), Points). %% Points can be list of maps (proplists) or map (proplist) 
+```erlang
 
-influx_udp:write(Data::binary()). %% Data contains valid influxdb JSON 
+# Writing to named pool with tags
+influx_udp:write(my_pool, Series::string()|atom()|binary(), Points::list(map())|list(proplist())|map()|proplist(), Tags::list(string())|list(atom())). 
+
+# Writing to anonymous pool without tags
+influx_udp:write(Pid, Series, Points).
+
+# Writing raw valid InfluxDB input data
+influx_udp:write(Data::binary()).
 ```
