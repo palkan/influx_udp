@@ -3,8 +3,7 @@
 Erlang InfluxDB UDP Writer
 ==========================
 
-Write data to Influxdb (~>0.8) using JSON UDP interface [(influxdb docs)](http://influxdb.com/docs/v0.8/api/reading_and_writing_data.html#writing-data-through-json-+-udp).
-
+Write data to Influxdb (~>0.9) using JSON UDP interface [(influxdb docs)](http://influxdb.com/docs/v0.9/concepts/reading_and_writing_data.html).
 
 **Erlang version:** >=17.1
 
@@ -62,10 +61,21 @@ Options not specified in `influx_udp:start_pool/2` would be taken from default c
 
 ```erlang
 
-%% Writing to named pool
-influx_udp:write(my_pool, Series::string()|atom()|binary(), Points::list(map())|list(proplist())|map()|proplist()). 
+%% Writing to named pool with tags
+influx_udp:write(
+  my_pool,
+  Series::string()|atom()|binary(), Points::list(map())|list(proplists:proplist())|map()|proplists:proplist(),
+  Tags::proplists:proplist()|map()). 
+
+influx_udp:write(my_pool, "cpu", [{value, 88}], [{host, 'eu-west'}]).
 
 %% Writing to default pool
+influx_udp:write("cpu", [#{value => 88}, #{value => 22}, #{value => 33}], [{host, 'eu-west'}]).
+
+%% Writing data with time
+influx_udp:write("cpu", #{value => 88, time => 1434055562000000000}, #{host => 'eu-west'}).
+
+%% Writing to default pool without tags
 influx_udp:write(Series, Points).
 
 %% Writing raw valid InfluxDB input data

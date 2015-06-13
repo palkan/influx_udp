@@ -14,7 +14,8 @@
   start_pool/2,
   write/1,
   write/2,
-  write/3
+  write/3,
+  write/4
 ]).
 
 %% ------------------------------------------------------------------
@@ -86,17 +87,48 @@ write(Series, Points) ->
     {send_to_pool, default, {write, Series, Points}}
   ).
 
+-spec write(
+    Pool::atom(),
+    Series::atom()|string()|binary(),
+    Points::list(influx_data_point())|influx_data_point()
+  ) -> ok
+; (
+    Series::atom()|string()|binary(),
+    Points::list(influx_data_point())|influx_data_point(),
+    Tags::influx_data_point()
+  ) -> ok.
+
 %% @doc
 %% Write data points to Series using named pool.
 %% @end
--spec write(
-  Pool::atom(), Series::atom()|string()|binary(),
-  Points::list(influx_data_point())|influx_data_point()
-) -> ok.
-write(Pool, Series, Points) ->
+write(Pool, Series, Points) when is_atom(Pool) ->
   gen_server:call(
     ?SERVER,
     {send_to_pool, Pool, {write, Series, Points}}
+  );
+
+%% @doc
+%% Write data points with Tags to Series using default pool.
+%% @end
+write(Series, Points, Tags) ->
+  gen_server:call(
+    ?SERVER,
+    {send_to_pool, default, {write, Series, Points, Tags}}
+  ).
+
+%% @doc
+%% Write data points with Tags to Series using named pool.
+%% @end
+-spec write(
+    Pool::atom(),
+    Series::atom()|string()|binary(),
+    Points::list(influx_data_point())|influx_data_point(),
+    Tags::influx_data_point()
+  ) -> ok.
+write(Pool, Series, Points, Tags) ->
+  gen_server:call(
+    ?SERVER,
+    {send_to_pool, Pool, {write, Series, Points, Tags}}
   ).
 
 init_server() ->
