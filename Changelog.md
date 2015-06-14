@@ -1,6 +1,6 @@
 ## 0.9.0
 Features:
-- Add support for InfluxDB 0.9 (tags)
+- Add support for InfluxDB 0.9 (tags, line protocol)
 
 ## 0.8.0
 Features:
