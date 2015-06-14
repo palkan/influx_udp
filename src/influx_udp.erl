@@ -14,7 +14,10 @@
   start_pool/2,
   write/1,
   write/2,
-  write/3
+  write/3,
+  write_to/2,
+  write_to/3,
+  write_to/4
 ]).
 
 %% ------------------------------------------------------------------
@@ -67,19 +70,12 @@ write(Bin) ->
   gen_server:call(?SERVER, {send_to_pool, default, {write, Bin}}).
 
 %% @doc
-%% Write binary data to influx using named pool.
-%% @end
--spec write(Pool::atom(), Bin::binary()) -> ok
-    ; (
-        Series::atom()|string()|binary(),
-        Points::list(influx_data_point())|influx_data_point()
-      ) -> ok.
-write(Pool, Bin) when is_binary(Bin) ->
-  gen_server:call(?SERVER, {send_to_pool, Pool, {write, Bin}});
-
-%% @doc
 %% Write data points to Series using default pool.
 %% @end
+- spec write(
+  Series::atom()|string()|binary(),
+  Points::list(influx_data_point())|influx_data_point()
+) -> ok.
 write(Series, Points) ->
   gen_server:call(
     ?SERVER,
@@ -87,16 +83,54 @@ write(Series, Points) ->
   ).
 
 %% @doc
-%% Write data points to Series using named pool.
+%% Write data points with Tags to Series using default pool.
 %% @end
 -spec write(
-  Pool::atom(), Series::atom()|string()|binary(),
-  Points::list(influx_data_point())|influx_data_point()
-) -> ok.
-write(Pool, Series, Points) ->
+    Series::atom()|string()|binary(),
+    Points::list(influx_data_point())|influx_data_point(),
+    Tags::influx_data_point()
+  ) -> ok.
+write(Series, Points, Tags) ->
+  gen_server:call(
+    ?SERVER,
+    {send_to_pool, default, {write, Series, Points, Tags}}
+  ).
+
+%% @doc
+%% Write binary data to influx using named pool.
+%% @end
+-spec write_to(Pool::atom(), Bin::binary()) -> ok.
+write_to(Pool, Bin) when is_binary(Bin) ->
+  gen_server:call(?SERVER, {send_to_pool, Pool, {write, Bin}}).
+
+%% @doc
+%% Write data points to Series using named pool.
+%% @end
+-spec write_to(
+    Pool::atom(),
+    Series::atom()|string()|binary(),
+    Points::list(influx_data_point())|influx_data_point()
+  ) -> ok.
+write_to(Pool, Series, Points) when is_atom(Pool) ->
   gen_server:call(
     ?SERVER,
     {send_to_pool, Pool, {write, Series, Points}}
+  ).
+
+
+%% @doc
+%% Write data points with Tags to Series using named pool.
+%% @end
+-spec write_to(
+    Pool::atom(),
+    Series::atom()|string()|binary(),
+    Points::list(influx_data_point())|influx_data_point(),
+    Tags::influx_data_point()
+  ) -> ok.
+write_to(Pool, Series, Points, Tags) ->
+  gen_server:call(
+    ?SERVER,
+    {send_to_pool, Pool, {write, Series, Points, Tags}}
   ).
 
 init_server() ->
