@@ -45,12 +45,25 @@ write_point_pool_test_() ->
     )
   }].
 
+write_influx_point_test_() ->
+  [{"Write point to named pool",
+    ?setup(
+      fun(Config) ->
+        {inorder,
+          [
+            write_influx_point_t_(Config)
+          ]
+        }
+      end
+    )
+  }].
+
 
 write_point_t_({UDP1, _UDP2}) ->
-  influx_udp:write(<<"test">>),
+  influx_udp:write(test, [{val, 1}], [{host, test}], 100),
   timer:sleep(1),
   [
-    ?_assertEqual(<<"test">>, gen_server:call(UDP1, msg))
+    ?_assertEqual(<<"test,host=test val=1 100">>, gen_server:call(UDP1, msg))
   ].
 
 write_point_to_pool_t_({_UDP1, UDP2}) ->
@@ -58,4 +71,14 @@ write_point_to_pool_t_({_UDP1, UDP2}) ->
   timer:sleep(1),
   [
     ?_assertEqual(<<"test_pool">>, gen_server:call(UDP2, msg))
+  ].
+
+write_influx_point_t_({UDP1, _UDP2}) ->
+  influx_udp:write([
+    #{ measurement => <<"test">>, fields => #{ val => 1}, time => 1},
+    #{ measurement => <<"test2">>, fields => #{ val => 2}, time => 2}
+  ]),
+  timer:sleep(1),
+  [
+    ?_assertEqual(<<"test val=1 1\ntest2 val=2 2\n">>, gen_server:call(UDP1, msg))
   ].

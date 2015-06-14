@@ -75,7 +75,10 @@ influx_udp:write_to(my_pool, "cpu", [{value, 88}], [{host, 'eu-west'}]).
 influx_udp:write("cpu", [#{value => 88}, #{value => 22}, #{value => 33}], [{host, 'eu-west'}]).
 
 %% Writing data with time
-influx_udp:write("cpu", #{value => 88, time => 1434055562000000000}, #{host => 'eu-west'}).
+influx_udp:write("cpu", #{value => 88}, #{host => 'eu-west'}, 1434055562000000000).
+
+%% or with current time
+influx_udp:write("cpu", #{value => 88}, #{host => 'eu-west'}, true).
 
 %% Writing to default pool without tags
 influx_udp:write(Series, Points).
@@ -85,4 +88,44 @@ influx_udp:write(Data::binary()).
 
 %% or
 influx_udp:write_to(my_pool, Data::binary()).
+
+%% Write Influx-valid map or proplist
+influx_udp:write(#{ measurement => test, fields => #{ val => 1} }).
+
+%% or many points
+influx_udp:write(
+  #{ measurement => test, fields => #{ val => 1} },
+  #{ measurement => test2, fields => #{ val => 2}, tags => { host => test}}
+)
+```
+
+## Encoder
+
+Module `influx_line` provides methods to encode erlang terms to Line protocol.
+Encoder autotamically sets timestamps (unique) when encoding list of points (see below).
+
+```erlang
+
+%% convert map or proplist to line
+influx_line:encode(#{ measurement => test, fields => #{ val => 1} }).
+
+#=> <<"test val=1">>
+
+%% convert list of points to lines
+influx_line:encode([
+  #{ measurement => test, fields => #{ val => 1} },
+  #{ measurement => test2, fields => #{ val => 2}, tags => { host => test}}
+]).
+
+#=> <<"test val=1 1434305562895000000\ntest2,host=test val=2 1434305562895000001">>
+
+%% convert any map/proplist to line
+influx_line:encode(test, #{ val => 1}).
+
+#=> <<"test val=1">>
+
+%% convert many points with the same measurement and tags to line
+influx_line:encode(test, [#{ val => 1}, #{ val => 2}], #{ host => test}, 100).
+
+#=> <<"test,host=test val=1 100\ntest,host=test val=2 101\n">>
 ```

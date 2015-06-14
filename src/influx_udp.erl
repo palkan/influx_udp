@@ -15,9 +15,11 @@
   write/1,
   write/2,
   write/3,
+  write/4,
   write_to/2,
   write_to/3,
-  write_to/4
+  write_to/4,
+  write_to/5
 ]).
 
 %% ------------------------------------------------------------------
@@ -62,12 +64,12 @@ start_pool(Name, Options) ->
   gen_server:call(?SERVER, {start_pool, Name, Options}).
 
 %% @doc
-%% Write binary data to influx using default pool.
+%% Write binary data or map/proplist point(-s) to influx using default pool.
 %% Note: Assumed that data represents InfluxDB-valid input.
 %% @end
--spec write(Bin::binary()) -> ok.
-write(Bin) ->
-  gen_server:call(?SERVER, {send_to_pool, default, {write, Bin}}).
+-spec write(Data::binary()|influx_data_points()) -> ok.
+write(Data) ->
+  write_to(default, Data).
 
 %% @doc
 %% Write data points to Series using default pool.
@@ -77,10 +79,7 @@ write(Bin) ->
   Points::list(influx_data_point())|influx_data_point()
 ) -> ok.
 write(Series, Points) ->
-  gen_server:call(
-    ?SERVER,
-    {send_to_pool, default, {write, Series, Points}}
-  ).
+  write_to(default, Series, Points).
 
 %% @doc
 %% Write data points with Tags to Series using default pool.
@@ -91,17 +90,27 @@ write(Series, Points) ->
     Tags::influx_data_point()
   ) -> ok.
 write(Series, Points, Tags) ->
-  gen_server:call(
-    ?SERVER,
-    {send_to_pool, default, {write, Series, Points, Tags}}
-  ).
+  write_to(default, Series, Points, Tags).
 
 %% @doc
-%% Write binary data to influx using named pool.
+%% Write data points with Tags and Time to Series using default pool.
 %% @end
--spec write_to(Pool::atom(), Bin::binary()) -> ok.
-write_to(Pool, Bin) when is_binary(Bin) ->
-  gen_server:call(?SERVER, {send_to_pool, Pool, {write, Bin}}).
+-spec write(
+    Series::atom()|string()|binary(),
+    Points::list(influx_data_point())|influx_data_point(),
+    Tags::influx_data_point(),
+    Time::non_neg_integer()|atom()
+  ) -> ok.
+write(Series, Points, Tags, Time) ->
+  write_to(default, Series, Points, Tags, Time).
+
+
+%% @doc
+%% Write binary data or map/proplist point(-s) to influx using named pool.
+%% @end
+-spec write_to(Pool::atom(), Data::binary()|influx_data_points()) -> ok.
+write_to(Pool, Data) ->
+  gen_server:call(?SERVER, {send_to_pool, Pool, {write, Data}}).
 
 %% @doc
 %% Write data points to Series using named pool.
@@ -111,7 +120,7 @@ write_to(Pool, Bin) when is_binary(Bin) ->
     Series::atom()|string()|binary(),
     Points::list(influx_data_point())|influx_data_point()
   ) -> ok.
-write_to(Pool, Series, Points) when is_atom(Pool) ->
+write_to(Pool, Series, Points) ->
   gen_server:call(
     ?SERVER,
     {send_to_pool, Pool, {write, Series, Points}}
@@ -131,6 +140,22 @@ write_to(Pool, Series, Points, Tags) ->
   gen_server:call(
     ?SERVER,
     {send_to_pool, Pool, {write, Series, Points, Tags}}
+  ).
+
+%% @doc
+%% Write data points with Tags and Time to Series using named pool.
+%% @end
+-spec write_to(
+    Pool::atom(),
+    Series::atom()|string()|binary(),
+    Points::list(influx_data_point())|influx_data_point(),
+    Tags::influx_data_point(),
+    Time::non_neg_integer()|atom()
+  ) -> ok.
+write_to(Pool, Series, Points, Tags, Time) ->
+  gen_server:call(
+    ?SERVER,
+    {send_to_pool, Pool, {write, Series, Points, Tags, Time}}
   ).
 
 init_server() ->
