@@ -168,7 +168,7 @@ extract_tags(_) -> <<"">>.
 encode_map_fields(K, V, Acc) ->
   BK = to_key(K),
   BV = to_val(V),
-  <<Acc/binary,BK/binary,<<"=">>/binary,BV/binary,?COMMA/binary>>.
+  <<Acc/binary, BK/binary, ?EQ/binary, BV/binary, ?COMMA/binary>>.
 
 encode_list_fields({K, V}, Acc) ->
   encode_map_fields(K, V, Acc).
@@ -176,7 +176,7 @@ encode_list_fields({K, V}, Acc) ->
 encode_map_tags(K, V, Acc) ->
   BK = to_key(K),
   BV = to_tag_val(V),
-  <<Acc/binary,BK/binary,<<"=">>/binary,BV/binary,?COMMA/binary>>.
+  <<Acc/binary, BK/binary, ?EQ/binary, BV/binary, ?COMMA/binary>>.
 
 encode_list_tags({K, V}, Acc) ->
   encode_map_tags(K, V, Acc).

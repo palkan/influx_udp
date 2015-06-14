@@ -62,12 +62,12 @@ Options not specified in `influx_udp:start_pool/2` would be taken from default c
 ```erlang
 
 %% Writing to named pool with tags
-influx_udp:write(
+influx_udp:write_to(
   my_pool,
   Series::string()|atom()|binary(), Points::list(map())|list(proplists:proplist())|map()|proplists:proplist(),
   Tags::proplists:proplist()|map()). 
 
-influx_udp:write(my_pool, "cpu", [{value, 88}], [{host, 'eu-west'}]).
+influx_udp:write_to(my_pool, "cpu", [{value, 88}], [{host, 'eu-west'}]).
 
 %% Writing to default pool
 influx_udp:write("cpu", [#{value => 88}, #{value => 22}, #{value => 33}], [{host, 'eu-west'}]).
@@ -82,5 +82,5 @@ influx_udp:write(Series, Points).
 influx_udp:write(Data::binary()).
 
 %% or
-influx_udp:write(my_pool, Data::binary()).
+influx_udp:write_to(my_pool, Data::binary()).
 ```

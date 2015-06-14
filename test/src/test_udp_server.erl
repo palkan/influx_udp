@@ -8,7 +8,7 @@
 %% API Function Exports
 %% ------------------------------------------------------------------
 
--export([start_link/0]).
+-export([start/1, stop/1]).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Exports
@@ -26,15 +26,19 @@
 %% API Function Definitions
 %% ------------------------------------------------------------------
 
-start_link() ->
-  gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+start(Port) ->
+  gen_server:start(?MODULE, [Port], []).
+
+stop(Pid) ->
+  Pid ! stop.
 
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
 
-init([]) ->
-  {ok, Socket} = gen_udp:open(4444, [binary, {active, once}]),
+init([Port]) ->
+  ?D({start_test_server, Port}),
+  {ok, Socket} = gen_udp:open(Port, [binary, {active, once}]),
   ?D({test_server_start_listening}),
   {ok, #state{sock=Socket}}.
 
@@ -51,6 +55,9 @@ handle_info({udp, Socket, _Host, _Port, Bin}, #state{sock=Sock}=State) ->
   ?D({message_received, Bin}),
   inet:setopts(Socket, [{active, once}]),
   {noreply, State#state{msg=Bin}};
+
+handle_info(stop, State) ->
+  {stop, normal, State};
 
 handle_info(_Info, State) ->
   {noreply, State}.
