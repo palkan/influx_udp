@@ -220,8 +220,18 @@ code_change(_OldVsn, State, _Extra) ->
   Options::map()
 ) -> {ok, Pid::pid()} | {error, Reason::any()}.
 start_pool_(Name, #{ host := Hostname } = Options) ->
-  case inet:getaddr(Hostname, inet) of
-    {ok, Host} -> 
+Addr =
+  case inet:parse_address(Hostname) of
+    {ok, _Addr} = Res -> Res;
+    {error, einval} ->
+      case inet:getaddr(Hostname, inet6) of
+       {error, _} -> inet:getaddr(Hostname, inet);
+       {ok, _Addr} = Res -> Res
+      end
+  end,
+
+  case Addr of
+    {ok, Host} ->
       influx_udp_sup:start_pool(
         Name,
         maps:update(host, Host, Options)

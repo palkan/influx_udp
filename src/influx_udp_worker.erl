@@ -37,7 +37,8 @@ start_link(Args) ->
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
 init([{options, #{ host := Host, port := Port} = _Options}]) ->
-  {ok, Socket} = gen_udp:open(0, [binary, {active, false}]),
+  AddrFamily = addr_family(Host),
+  {ok, Socket} = gen_udp:open(0, [binary, {active, false}, AddrFamily]),
   LocalPort = inet:port(Socket),
   ?I({"Open UDP socket on port", LocalPort}),
   {
@@ -86,7 +87,10 @@ code_change(_OldVsn, State, _Extra) ->
 %% Internal Function Definitions
 %% ------------------------------------------------------------------
 
-send_data(_, {error, Reason} = Error) -> 
+addr_family({_, _, _, _}) -> inet;
+addr_family({_, _, _, _, _, _, _, _}) -> inet6.
+
+send_data(_, {error, _Reason} = Error) ->
   ?E(Error),
    Error;
 
