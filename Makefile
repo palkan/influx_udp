@@ -17,7 +17,7 @@ update-deps:
 	$(REBAR) update-deps
 
 console:
-	erl -pa deps/*/ebin -pa deps/*/include -pa ebin -s lager -s influx_udp
+	erl -pa deps/*/ebin -pa deps/*/include -pa ebin -s influx_udp
 
 test: eunit ct
 

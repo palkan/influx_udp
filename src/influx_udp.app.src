@@ -6,7 +6,9 @@
   {applications, [
                   kernel,
                   stdlib,
-                  lager
+                  lager,
+                  ulitos,
+                  poolboy
                  ]},
   {mod, { influx_udp_app, []}},
   {env, []}

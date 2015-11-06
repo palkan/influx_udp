@@ -2,6 +2,7 @@
 -include_lib("influx_udp/include/influx_udp_priv.hrl").
 -include_lib("influx_udp/include/influx_udp.hrl").
 -define(SERVER, ?MODULE).
+-define(DEPS, [lager, ulitos, poolboy]).
 
 %% ------------------------------------------------------------------
 %% API Function Exports
@@ -46,6 +47,7 @@ start_link() ->
 %% ===================================================================
 
 start() ->
+  ulitos_app:ensure_started(?DEPS),
   application:start(influx_udp).
 
 stop() ->
