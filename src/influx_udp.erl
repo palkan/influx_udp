@@ -223,13 +223,9 @@ code_change(_OldVsn, State, _Extra) ->
 ) -> {ok, Pid::pid()} | {error, Reason::any()}.
 start_pool_(Name, #{ host := Hostname } = Options) ->
 Addr =
-  case inet:parse_address(Hostname) of
-    {ok, _Addr} = Res -> Res;
-    {error, einval} ->
-      case inet:getaddr(Hostname, inet6) of
-       {error, _} -> inet:getaddr(Hostname, inet);
-       {ok, _Addr} = Res -> Res
-      end
+  case inet:getaddr(Hostname, inet) of
+      {ok, _Addr} = Res -> Res;
+      {error, _Reason}  -> inet:getaddr(Hostname, inet6)
   end,
 
   case Addr of
