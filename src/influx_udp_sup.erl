@@ -49,5 +49,5 @@ start_pool(Name, Options) ->
 init([]) ->
   Children = [
     ?CHILD(influx_udp, worker)
-  ], 
+  ],
   {ok, { {one_for_one, 5, 10}, Children} }.
