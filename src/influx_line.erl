@@ -31,7 +31,7 @@
 %% Point should contain 'measurement' and 'fields' keys (as atoms).
 %% Other available keys: 'tags', 'time'.
 %% Return binary line(-s) or `{error, invalid_data}` if any point contains
-%% neither 'measurement' nor 'fields' key. 
+%% neither 'measurement' nor 'fields' key.
 %%
 %% @example
 %%   influx_line:encode(
@@ -54,7 +54,7 @@ encode(List) when is_list(List) ->
   ?D(encode_list),
   encode_points_list(undefined, List, timestamp(), []);
 
-encode(_Other) -> 
+encode(_Other) ->
   ?D({unknown_data, _Other}),
   {error, invalid_data}.
 
@@ -85,7 +85,7 @@ encode(Name, Fields, Tags) ->
 %% If Time is `true` then `inlux_line:timestamp()` is used as point time.
 %% If there are several points, then every point is set a uniq time
 %% (by incrementing provided time).
-%% 
+%%
 %% Note: if there are several points and no time specified then current time
 %% is used as base time.
 %%
@@ -153,7 +153,7 @@ encode_item(Name, Item, Tags, Time) ->
 encode_item_with_prefix(Prefix, Item, Time) ->
   BTime = encode_time(Time),
   Fields = encode_fields(Item),
-  concat_line(Prefix, Fields, BTime).  
+  concat_line(Prefix, Fields, BTime).
 
 encode_list(Name, [Item], Tags, Time) ->
   encode_item(Name, Item, Tags, Time);
@@ -213,7 +213,7 @@ encode_points_list(Item, [H|Rest], Time, Acc) ->
     [Item|Acc]
   ).
 
-encode_with_time([{_,_}|_] = List, BaseTime) ->
+encode_with_time([{_, _}|_] = List, BaseTime) ->
   M = proplists:get_value(measurement, List, undefined),
   F = proplists:get_value(fields, List, undefined),
   if M =:= undefined orelse F =:= undefined
@@ -324,7 +324,7 @@ to_val(A) when is_atom(A) ->
 to_val(S) when is_list(S) ->
   to_val(list_to_binary(S));
 
-to_val(S) when is_binary(S) -> 
+to_val(S) when is_binary(S) ->
   Escaped = escape_string(S),
   <<?Q/binary, Escaped/binary, ?Q/binary>>.
 
@@ -506,7 +506,7 @@ encode_map_without_measurement_test() ->
       #{
         fields => #{ val => 10}
       }
-    ) 
+    )
   ).
 
 encode_map_without_fields_test() ->
@@ -517,7 +517,7 @@ encode_map_without_fields_test() ->
         measurement => test,
         tags => #{ val => 10}
       }
-    ) 
+    )
   ).
 
 encode_proplist_without_measurement_test() ->
@@ -527,7 +527,7 @@ encode_proplist_without_measurement_test() ->
       [
         {fields,  [{val, 10}] }
       ]
-    ) 
+    )
   ).
 
 encode_proplist_without_fields_test() ->
@@ -538,7 +538,7 @@ encode_proplist_without_fields_test() ->
         {measurement, test},
         {tags, #{ val => 10}}
       ]
-    ) 
+    )
   ).
 
 encode_at_least_one_invalid_test() ->
@@ -554,7 +554,7 @@ encode_at_least_one_invalid_test() ->
           {tags, #{ val => 10}}
         ]
       ]
-    ) 
+    )
   ).
 
 encode_3_with_proplist_tags_test() ->
@@ -583,7 +583,7 @@ encode_3_many_points_with_tags_test() ->
       [
         [{memory, "high"}, {"cpu", 20}],
         [{<<"memory">>, "low"}, {cpu, 30}]
-      ], 
+      ],
       #{host => 'eu-west', num => 111},
       100
     )

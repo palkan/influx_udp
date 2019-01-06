@@ -42,7 +42,7 @@ init([{options, #{ host := Host, port := Port} = _Options}]) ->
   LocalPort = inet:port(Socket),
   ?I({"Open UDP socket on port", LocalPort}),
   {
-    ok, 
+    ok,
     #state{
       socket = Socket,
       host = Host,
