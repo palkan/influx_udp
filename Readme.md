@@ -1,9 +1,8 @@
 [![Build Status](https://travis-ci.org/palkan/influx_udp.svg?branch=master)](https://travis-ci.org/palkan/influx_udp)
 
-Erlang InfluxDB UDP Writer
-==========================
+# Erlang InfluxDB UDP Writer
 
-Write data to Influxdb (>= 0.9) using JSON UDP interface [(influxdb docs)](http://influxdb.com/docs/v0.9/concepts/reading_and_writing_data.html).
+Write data to [InfluxDB](http://influxdb.com) (>= 0.9) via UDP (see [(InfluxDB docs)](https://docs.influxdata.com/influxdb/v1.7/supported_protocols/udp/)).
 
 **Erlang/OTP version:** >=17.1
 
@@ -27,10 +26,10 @@ app.config
 [
   {influx_udp,
     [
-        {influx_host, '8.8.8.8'}, %% defaults to '127.0.0.1'
-        {influx_port, 4444}, %% defaults to 4444
-        {pool_size, 5}, 
-        {max_overflow, 10} %% poolboy settings (defaults are 1 and 0)
+      {influx_host, '127.0.0.1'},
+      {influx_port, 8089},
+      {pool_size, 5}, %% defaults to 3
+      {max_overflow, 10} %% defaults to 1
     ]
   }
 ].
@@ -38,19 +37,17 @@ app.config
 
 ## Usage
 
-First, you need to start application: 
+First, you need to start the application: 
 
 ```erlang
 influx_udp:start().
 ``` 
 
-And then you can create pools and write data to InfluxDB.
+Now you can create _pools_ and write data to InfluxDB.
 
 ## Pools
 
-The default pool is started on application start unless you specified `{default_pool, false}` in configuration file.
-
-Default pool uses parameters specified in application configuration.
+The default pool is started on application start if you specified `influx_host` and `influx_port` in the configuration file (see above).
 
 You can run pools manually:
 
@@ -58,13 +55,13 @@ You can run pools manually:
 influx_udp:start_pool(my_pool, #{ host => 'yet.another.influx.host' }).
 ```
 
-Options not specified in `influx_udp:start_pool/2` would be taken from default configuration.
+Options not specified in `influx_udp:start_pool/2` would be taken from the default configuration.
 
 ## Writing data
 
 ```erlang
 
-%% Writing to named pool with tags
+%% Writing to the named pool with tags
 influx_udp:write_to(
   my_pool,
   Series::string()|atom()|binary(), Points::list(map())|list(proplists:proplist())|map()|proplists:proplist(),
@@ -103,7 +100,7 @@ influx_udp:write(
 ## Encoder
 
 Module `influx_line` provides methods to encode erlang terms to Line protocol.
-Encoder autotamically sets timestamps (unique) when encoding list of points (see below).
+Encoder automatically sets timestamps (unique) when encoding list of points (see below).
 
 ```erlang
 
@@ -130,3 +127,11 @@ influx_line:encode(test, [#{ val => 1}, #{ val => 2}], #{ host => test}, 100).
 
 #=> <<"test,host=test val=1 100\ntest,host=test val=2 101\n">>
 ```
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/palkan/influx_udp.
+
+## License
+
+The library is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

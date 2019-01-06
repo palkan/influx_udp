@@ -164,20 +164,14 @@ init_server() ->
   erlang:register(?SERVER, self()),
   proc_lib:init_ack({ok, self()}),
 
-  %% Start default pool
   Defaults = #{
-    port => ?Config(influx_port, 4444),
-    host => ?Config(influx_host, '127.0.0.1'),
+    port => ?Config(influx_port, 8089),
+    host => ?Config(influx_host, undefined),
     pool_size => ?Config(pool_size, 3),
     max_overflow => ?Config(max_overflow, 1)
   },
 
-  UseDefault = ?Config(default_pool, true),
-
-  if UseDefault
-    ->  start_pool_(default, Defaults);
-    true -> ok
-  end,
+  start_default_pool(Defaults),
 
   gen_server:enter_loop(?SERVER, [], #state{defaults = Defaults}).
 
@@ -217,6 +211,13 @@ code_change(_OldVsn, State, _Extra) ->
 %% ------------------------------------------------------------------
 %% Internal Function Definitions
 %% ------------------------------------------------------------------
+-spec start_default_pool(Defaults::map()) -> ok | false.
+start_default_pool(#{ host := undefined } = Defaults) -> false;
+
+start_default_pool(Defaults) ->
+  start_pool_(default, Defaults),
+  ok.
+
 -spec start_pool_(
   Name::atom(),
   Options::map()
