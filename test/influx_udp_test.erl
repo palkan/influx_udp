@@ -5,12 +5,20 @@
 
 -define(setup(F), {setup, fun setup_/0, fun cleanup_/1, F}).
 
+%% The default influx_udp port
+-define(PORT, 8089).
+-define(PORT2, 44515).
+
 setup_() ->
   lager:start(),
-  {ok, UDP1} = test_udp_server:start(4444),
-  {ok, UDP2} = test_udp_server:start(4455),
+  {ok, UDP1} = test_udp_server:start(?PORT),
+  {ok, UDP2} = test_udp_server:start(?PORT2),
+
+  %% Set default configuration
+  ulitos_app:set_var(?APP, influx_host, '127.0.0.1'),
+
   influx_udp:start(),
-  {ok, Pid} = influx_udp:start_pool(test, #{ pool_size => 1, port => 4455}),
+  {ok, Pid} = influx_udp:start_pool(test, #{ pool_size => 1, port => ?PORT2}),
   {UDP1, UDP2}.
 
 cleanup_({UDP1, UDP2}) ->

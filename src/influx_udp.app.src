@@ -4,7 +4,7 @@
     {vsn, "1.0.0"},
     {registered, []},
     {applications, [kernel, stdlib, lager, ulitos, poolboy]},
-    {modules, { influx_udp_app, []}},
+    {mod, { influx_udp_app, []}},
     {env, []},
     {maintainers, ["Vladimir Dementyev"]},
     {licenses, ["MIT"]},
