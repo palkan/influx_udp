@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/palkan/influx_udp.svg?branch=master)](https://travis-ci.org/palkan/influx_udp)
+[![Hex Version](https://img.shields.io/hexpm/v/influx_udp.svg)](https://hex.pm/packages/influx_udp)
 
 # Erlang InfluxDB UDP Writer
 
