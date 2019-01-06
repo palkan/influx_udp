@@ -3,7 +3,7 @@
 
 # Erlang InfluxDB UDP Writer
 
-Write data to [InfluxDB](http://influxdb.com) (>= 0.9) via UDP (see [(InfluxDB docs)](https://docs.influxdata.com/influxdb/v1.7/supported_protocols/udp/)).
+Write data to [InfluxDB](http://influxdb.com) (>= 0.9) via UDP (see [InfluxDB docs](https://docs.influxdata.com/influxdb/v1.7/supported_protocols/udp/)).
 
 **Erlang/OTP version:** >=17.1
 
