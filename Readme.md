@@ -3,22 +3,23 @@
 Erlang InfluxDB UDP Writer
 ==========================
 
-Write data to Influxdb (~>0.9) using JSON UDP interface [(influxdb docs)](http://influxdb.com/docs/v0.9/concepts/reading_and_writing_data.html).
+Write data to Influxdb (>= 0.9) using JSON UDP interface [(influxdb docs)](http://influxdb.com/docs/v0.9/concepts/reading_and_writing_data.html).
 
-**NOTE**: This version isn't compatible with InfluxDB ~0.8. See [version 0.8.0](https://github.com/palkan/influx_udp/tree/0.8.0).
-
-**Erlang version:** >=17.1
+**Erlang/OTP version:** >=17.1
 
 ## Setup
 
 rebar.config
 ```erlang
-...
+%% using Hex
 {deps, [
-  ...
+  influx_udp
+]}.
+
+%% from source
+{deps, [
   {influx_udp, ".*", {git, "https://github.com/palkan/influx_udp.git", "master"}}
 ]}.
-...
 ```
 
 app.config

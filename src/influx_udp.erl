@@ -230,6 +230,7 @@ Addr =
 
   case Addr of
     {ok, Host} ->
+      ?I({<<"Start clients pool">>, Host, Options}),
       influx_udp_sup:start_pool(
         Name,
         maps:update(host, Host, Options)
