@@ -2,7 +2,7 @@
 
 ## 1.0.0 (2019-01-06)
 
-[Hex package]() is available 🎉.
+[Hex package](https://hex.pm/packages/influx_udp) is available 🎉.
 
 - Default pool behaviour changed.
 
