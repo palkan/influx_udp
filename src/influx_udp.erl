@@ -212,7 +212,7 @@ code_change(_OldVsn, State, _Extra) ->
 %% Internal Function Definitions
 %% ------------------------------------------------------------------
 -spec start_default_pool(Defaults::map()) -> ok | false.
-start_default_pool(#{ host := undefined } = Defaults) -> false;
+start_default_pool(#{ host := undefined }) -> false;
 
 start_default_pool(Defaults) ->
   start_pool_(default, Defaults),
