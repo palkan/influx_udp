@@ -1,12 +1,12 @@
 {"1.1.0",
 [{<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.9">>},1},
- {<<"lager">>,{pkg,<<"lager">>,<<"3.5.1">>},0},
- {<<"poolboy">>,{pkg,<<"poolboy">>,<<"1.5.1">>},0},
+ {<<"lager">>,{pkg,<<"lager">>,<<"3.6.8">>},0},
+ {<<"poolboy">>,{pkg,<<"poolboy">>,<<"1.5.2">>},0},
  {<<"ulitos">>,{pkg,<<"ulitos">>,<<"0.4.0">>},0}]}.
 [
 {pkg_hash,[
  {<<"goldrush">>, <<"F06E5D5F1277DA5C413E84D5A2924174182FB108DABB39D5EC548B27424CD106">>},
- {<<"lager">>, <<"63897A61AF646C59BB928FEE9756CE8BDD02D5A1A2F3551D4A5E38386C2CC071">>},
- {<<"poolboy">>, <<"6B46163901CFD0A1B43D692657ED9D7E599853B3B21B95AE5AE0A777CF9B6CA8">>},
+ {<<"lager">>, <<"897EFC7679BB82383448646C96768CDC4E747464DD18B999C7AACA485686B0DA">>},
+ {<<"poolboy">>, <<"392B007A1693A64540CEAD79830443ABF5762F5D30CF50BC95CB2C1AAAFA006B">>},
  {<<"ulitos">>, <<"BCDF0528AF4B59F1CB7D710E4B056688751C600833F31F504FEC4BAA88F0F42B">>}]}
 ].
