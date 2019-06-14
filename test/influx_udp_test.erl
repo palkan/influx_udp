@@ -18,7 +18,7 @@ setup_() ->
   ulitos_app:set_var(?APP, influx_host, '127.0.0.1'),
 
   influx_udp:start(),
-  {ok, Pid} = influx_udp:start_pool(test, #{ pool_size => 1, port => ?PORT2}),
+  {ok, _Pid} = influx_udp:start_pool(test, #{ pool_size => 1, port => ?PORT2}),
   {UDP1, UDP2}.
 
 cleanup_({UDP1, UDP2}) ->

@@ -51,7 +51,7 @@ handle_call(_Request, _From, State) ->
 handle_cast(_Msg, State) ->
   {noreply, State}.
 
-handle_info({udp, Socket, _Host, _Port, Bin}, #state{sock=Sock}=State) ->
+handle_info({udp, Socket, _Host, _Port, Bin}, #state{sock=Socket}=State) ->
   ?D({message_received, Bin}),
   inet:setopts(Socket, [{active, once}]),
   {noreply, State#state{msg=Bin}};
@@ -72,4 +72,3 @@ code_change(_OldVsn, State, _Extra) ->
 %% ------------------------------------------------------------------
 %% Internal Function Definitions
 %% ------------------------------------------------------------------
-
