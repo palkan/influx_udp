@@ -3,7 +3,7 @@
     {description, "InfluxDB UDP writer"},
     {vsn, "1.0.0"},
     {registered, []},
-    {applications, [kernel, stdlib, lager, ulitos, poolboy]},
+    {applications, [kernel, stdlib, ulitos, poolboy]},
     {mod, { influx_udp_app, []}},
     {env, []},
     {maintainers, ["Vladimir Dementyev"]},
