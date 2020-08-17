@@ -1,7 +1,7 @@
 {application, influx_udp,
   [
     {description, "InfluxDB UDP writer"},
-    {vsn, "1.0.0"},
+    {vsn, "1.1.0"},
     {registered, []},
     {applications, [kernel, stdlib, ulitos, poolboy]},
     {mod, { influx_udp_app, []}},

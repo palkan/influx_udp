@@ -2,6 +2,8 @@
 
 ## master
 
+## 1.1.0 (2020-08-17)
+
 - Drop Lager dependency.
 
 Now standard Logger or `error_logger` (for OTP <21) is used instead.
