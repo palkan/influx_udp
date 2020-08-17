@@ -30,3 +30,4 @@ ebin/
 .eunit
 *.dump
 _build/
+doc/

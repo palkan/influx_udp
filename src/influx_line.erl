@@ -30,18 +30,22 @@
 %% Encode InfluxDB data point (or list of points) to line.
 %% Point should contain 'measurement' and 'fields' keys (as atoms).
 %% Other available keys: 'tags', 'time'.
-%% Return binary line(-s) or `{error, invalid_data}` if any point contains
+%% Return binary line(-s) or `{error, invalid_data}' if any point contains
 %% neither 'measurement' nor 'fields' key.
 %%
-%% @example
+%% Example:
+%%
+%% ```
 %%   influx_line:encode(
 %%     #{
-%%        measurement => cpu,
-%%        fields => #{ value => 43},
-%%        tags => #{ host => 'eu-west', ip => "127.0.0.1" },
-%%        time => 10000000000
-%%      })
-%%   /=> <<"cpu,host=eu-west,ip="127.0.0.1" value=43 10000000000\n">>
+%%       measurement => cpu,
+%%       fields => #{ value => 43},
+%%       tags => #{ host => 'eu-west', ip => "127.0.0.1" },
+%%       time => 10000000000
+%%     }
+%%   ).
+%%   <<"cpu,host=eu-west,ip="127.0.0.1" value=43 10000000000\n">>
+%% '''
 %% @end
 -spec encode(Points::influx_data_points()) -> Line::binary()|{error, Reason::atom()}.
 encode(#{} = Data) ->
@@ -82,14 +86,16 @@ encode(Name, Fields, Tags) ->
 %% @doc
 %% Encode measurement, fields (or list of fields), tags and time to line.
 %% If Time is integer then it's used as point time.
-%% If Time is `true` then `inlux_line:timestamp()` is used as point time.
+%% If Time is `true' then `inlux_line:timestamp()' is used as point time.
 %% If there are several points, then every point is set a uniq time
 %% (by incrementing provided time).
 %%
 %% Note: if there are several points and no time specified then current time
 %% is used as base time.
 %%
-%% @example
+%% Example:
+%%
+%% ```
 %%   %% several points (uniq times)
 %%   influx_line:encode(
 %%     cpu,
@@ -99,9 +105,9 @@ encode(Name, Fields, Tags) ->
 %%     ],
 %%     #{ host => 'eu-west', ip => "127.0.0.1" },
 %%     1000000000
-%%   )
-%%   /=> <<"cpu,host=eu-west,ip="127.0.0.1" value=43 1000000000\n
-%%          cpu,host=eu-west,ip="127.0.0.1" value=12 1000000001\n">>
+%%   ).
+%%   <<"cpu,host=eu-west,ip="127.0.0.1" value=43 1000000000\n
+%%      cpu,host=eu-west,ip="127.0.0.1" value=12 1000000001\n">>
 %%
 %%   %% one point without time
 %%   influx_line:encode(
@@ -111,8 +117,9 @@ encode(Name, Fields, Tags) ->
 %%       #{ value => 12 }
 %%     ],
 %%     #{ host => 'eu-west', ip => "127.0.0.1" }
-%%   )
-%%   /=> <<"cpu,host=eu-west,ip="127.0.0.1" value=43\n">>
+%%   ).
+%%   <<"cpu,host=eu-west,ip="127.0.0.1" value=43\n">>
+%% '''
 %% @end
 -spec encode(
   Name::string()|atom()|binary(),

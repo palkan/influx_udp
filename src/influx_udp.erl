@@ -56,9 +56,13 @@ stop() ->
 %% @doc
 %% Start new pool with Name and Options (as map)
 %% Options:
+%%
 %% - host - InfluxDB hostname
+%%
 %% - port - InflxuDB UDP port
+%%
 %% - pool_size - Pool size (numer of workers)
+%%
 %% - max_overflow - Pool max overflow size
 %% @end
 -spec start_pool(Name::atom(), Options::map()) -> ok.
