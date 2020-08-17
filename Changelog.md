@@ -1,5 +1,13 @@
 # Change log
 
+## master
+
+- Drop Lager dependency.
+
+Now standard Logger or `error_logger` (for OTP <21) is used instead.
+
+[PR](https://github.com/palkan/influx_udp/pull/16).
+
 ## 1.0.0 (2019-01-06)
 
 [Hex package](https://hex.pm/packages/influx_udp) is available 🎉.
