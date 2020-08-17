@@ -1,10 +1,8 @@
 {"1.1.0",
-[{<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.9">>},1},
- {<<"poolboy">>,{pkg,<<"poolboy">>,<<"1.5.2">>},0},
+[{<<"poolboy">>,{pkg,<<"poolboy">>,<<"1.5.2">>},0},
  {<<"ulitos">>,{pkg,<<"ulitos">>,<<"0.4.0">>},0}]}.
 [
 {pkg_hash,[
- {<<"goldrush">>, <<"F06E5D5F1277DA5C413E84D5A2924174182FB108DABB39D5EC548B27424CD106">>},
  {<<"poolboy">>, <<"392B007A1693A64540CEAD79830443ABF5762F5D30CF50BC95CB2C1AAAFA006B">>},
  {<<"ulitos">>, <<"BCDF0528AF4B59F1CB7D710E4B056688751C600833F31F504FEC4BAA88F0F42B">>}]}
 ].

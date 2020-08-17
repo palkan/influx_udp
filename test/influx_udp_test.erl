@@ -10,7 +10,6 @@
 -define(PORT2, 44515).
 
 setup_() ->
-  lager:start(),
   {ok, UDP1} = test_udp_server:start(?PORT),
   {ok, UDP2} = test_udp_server:start(?PORT2),
 
@@ -22,7 +21,6 @@ setup_() ->
   {UDP1, UDP2}.
 
 cleanup_({UDP1, UDP2}) ->
-  application:stop(lager),
   influx_udp:stop(),
   test_udp_server:stop(UDP1),
   test_udp_server:stop(UDP2).

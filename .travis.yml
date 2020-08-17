@@ -7,4 +7,4 @@ otp_release:
    - 23.0
 script:
     - wget https://github.com/erlang/rebar3/releases/download/3.11.1/rebar3 && chmod +x rebar3 && ./rebar3 update
-    - ./rebar3 do compile, ct
+    - ./rebar3 do compile, eunit, ct
