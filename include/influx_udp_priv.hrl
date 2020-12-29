@@ -24,18 +24,8 @@
 
 -include_lib("kernel/include/logger.hrl").
 
--ifdef(TEST).
-
--define(D(X), ?LOG_INFO("[DEBUG] ~p:~p ~p~n",[?MODULE, ?LINE, X])).
--define(I(X), ?LOG_INFO("[INFO] ~p:~p ~p~n",[?MODULE, ?LINE, X])).
--define(E(X), ?LOG_INFO("[ERROR] ~p:~p ~p~n",[?MODULE, ?LINE, X])).
-
--else.
-
 -define(D(X), ?LOG_DEBUG(X)).
 -define(I(X), ?LOG_INFO(X)).
 -define(E(X), ?LOG_ERROR(X)).
-
--endif.
 
 -endif.

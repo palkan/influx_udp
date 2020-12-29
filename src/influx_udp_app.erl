@@ -7,7 +7,7 @@
 -export([start/2, stop/1]).
 
 start(_StartType, _StartArgs) ->
-  ?I("Starting application: influx_udp"),
+  ?I(#{msg => "Starting application: influx_udp"}),
   influx_udp_sup:start_link().
 
 stop(_State) ->

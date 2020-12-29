@@ -40,7 +40,7 @@ init([{options, #{ host := Host, port := Port} = _Options}]) ->
   AddrFamily = addr_family(Host),
   {ok, Socket} = gen_udp:open(0, [binary, {active, false}, AddrFamily]),
   LocalPort = inet:port(Socket),
-  ?I({"Open UDP socket on port", LocalPort}),
+  ?I(#{msg => "Open UDP socket on port", port => LocalPort}),
   {
     ok,
     #state{
@@ -90,8 +90,8 @@ code_change(_OldVsn, State, _Extra) ->
 addr_family({_, _, _, _}) -> inet;
 addr_family({_, _, _, _, _, _, _, _}) -> inet6.
 
-send_data(_, {error, _Reason} = Error) ->
-  ?E(Error),
+send_data(_, {error, Reason} = Error) ->
+  ?E(#{error => Reason}),
    Error;
 
 send_data(#state{socket=Socket, port=Port, host=Host, debug = Debug}, Data) ->
@@ -101,4 +101,4 @@ send_data(#state{socket=Socket, port=Port, host=Host, debug = Debug}, Data) ->
 debug_send(_, false) -> ok;
 
 debug_send(Bin, _) ->
-  ?D({send_binary_data, byte_size(Bin), Bin}).
+  ?D(#{event => send_binary_data, size => byte_size(Bin), data => Bin}).

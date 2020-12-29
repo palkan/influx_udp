@@ -235,12 +235,12 @@ Addr =
 
   case Addr of
     {ok, Host} ->
-      ?I({<<"Start clients pool">>, Host, Options}),
+      ?I(#{msg => "Start clients pool", host => Host, options => Options}),
       influx_udp_sup:start_pool(
         Name,
         maps:update(host, Host, Options)
       );
     {error, Error} ->
-      ?E({<<"Failed to resolve influxdb host">>, Hostname, Error}),
+      ?E(#{msg => "Failed to resolve influxdb host", host => Hostname, error => Error}),
       {error, Error}
   end.
