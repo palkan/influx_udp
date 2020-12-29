@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/palkan/influx_udp.svg?branch=master)](https://travis-ci.org/palkan/influx_udp)
+![Build](https://github.com/palkan/influx_udp/workflows/Test/badge.svg)
 [![Hex Version](https://img.shields.io/hexpm/v/influx_udp.svg)](https://hex.pm/packages/influx_udp)
 
 # Erlang InfluxDB UDP Writer
@@ -38,11 +38,11 @@ app.config
 
 ## Usage
 
-First, you need to start the application: 
+First, you need to start the application:
 
 ```erlang
 influx_udp:start().
-``` 
+```
 
 Now you can create _pools_ and write data to InfluxDB.
 
@@ -66,7 +66,7 @@ Options not specified in `influx_udp:start_pool/2` would be taken from the defau
 influx_udp:write_to(
   my_pool,
   Series::string()|atom()|binary(), Points::list(map())|list(proplists:proplist())|map()|proplists:proplist(),
-  Tags::proplists:proplist()|map()). 
+  Tags::proplists:proplist()|map()).
 
 influx_udp:write_to(my_pool, "cpu", [{value, 88}], [{host, 'eu-west'}]).
 
