@@ -2,6 +2,10 @@
 
 ## master
 
+## 1.1.1 (2020-12-29)
+
+- Fix Erlang Logger compatibility.
+
 ## 1.1.0 (2020-08-17)
 
 - Drop Lager dependency.
