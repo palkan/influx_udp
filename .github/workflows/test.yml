@@ -18,4 +18,4 @@ jobs:
       - uses: gleam-lang/setup-erlang@v1.1.0
         with:
           otp-version: ${{matrix.otp}}
-      - run: rebar3 do compile, eunit, ct
+      - run: rebar3 do compile, dialyzer, eunit, ct

@@ -39,7 +39,7 @@ start_link(Args) ->
 init([{options, #{ host := Host, port := Port} = _Options}]) ->
   AddrFamily = addr_family(Host),
   {ok, Socket} = gen_udp:open(0, [binary, {active, false}, AddrFamily]),
-  LocalPort = inet:port(Socket),
+  {ok, LocalPort} = inet:port(Socket),
   ?I(#{msg => "Open UDP socket on port", port => LocalPort}),
   {
     ok,

@@ -174,9 +174,6 @@ encode_list(Name, List, Tags, Time) when is_integer(Time) ->
 encode_list(Name, List, Tags, _Time) ->
   encode_list(Name, List, Tags, influx_line:timestamp()).
 
-encode_list_with_time({error, _} = Error, _, _, _, _) ->
-  Error;
-
 encode_list_with_time(Item, [], _, _, Acc) ->
   lists:foldl(fun concat_lines/2, ?EMPTY, [Item|Acc]);
 

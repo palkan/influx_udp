@@ -53,6 +53,7 @@ start() ->
 stop() ->
   application:stop(influx_udp).
 
+
 %% @doc
 %% Start new pool with Name and Options (as map)
 %% Options:
@@ -65,7 +66,7 @@ stop() ->
 %%
 %% - max_overflow - Pool max overflow size
 %% @end
--spec start_pool(Name::atom(), Options::map()) -> ok.
+-spec start_pool(Name::atom(), Options::map()) -> {ok, pid()} | {error, term()}.
 start_pool(Name, Options) ->
   gen_server:call(?SERVER, {start_pool, Name, Options}).
 
@@ -225,7 +226,7 @@ start_default_pool(Defaults) ->
 -spec start_pool_(
   Name::atom(),
   Options::map()
-) -> {ok, Pid::pid()} | {error, Reason::any()}.
+) -> {ok, Pid::pid()} | {error, Reason::term()}.
 start_pool_(Name, #{ host := Hostname } = Options) ->
 Addr =
   case inet:getaddr(Hostname, inet) of

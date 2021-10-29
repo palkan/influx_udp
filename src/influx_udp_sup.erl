@@ -21,8 +21,8 @@ start_link() ->
   supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 -spec start_pool(
-    Host::inet:ip_address()|inet:ip_hostname(),
-    Port::inet:port_number()
+    Name::atom(),
+    Options::map()
   ) -> {ok, undefined | pid()} |
        {ok, undefined | pid(), any()} |
        {error, any()}.
