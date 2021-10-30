@@ -28,6 +28,10 @@ jobs:
       - uses: ErlGang/setup-erlang@master
         with:
           otp-version: ${{matrix.otp}}
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/rebar3
+          key: ${{runner.os}}-${{matrix.otp}}-${{hashFiles('rebar.config')}}
       - run: curl -LO https://github.com/erlang/rebar3/releases/download/${{matrix.rebar}}/rebar3
       - run: chmod +x rebar3
       - run: ./rebar3 do compile, dialyzer, eunit, ct
