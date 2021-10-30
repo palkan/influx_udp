@@ -15,7 +15,7 @@ jobs:
         otp: [20.3, 21.3, 22.1, 23.1]
     steps:
       - uses: actions/checkout@v2.0.0
-      - uses: gleam-lang/setup-erlang@v1.1.3
+      - uses: ErlGang/setup-erlang@master
         with:
           otp-version: ${{matrix.otp}}
       - run: rebar3 do compile, dialyzer, eunit, ct
