@@ -2,6 +2,10 @@
 
 ## master
 
+## 1.1.2 (2021-10-30) 🎃
+
+- Fix type specs.
+
 ## 1.1.1 (2020-12-29)
 
 - Fix Erlang Logger compatibility.
